@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\NotulenController;
 
 // Dashboard Get Jadwal
 Route::get('/jadwal', [JadwalController::class, 'getJadwal']);

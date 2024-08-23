@@ -203,6 +203,12 @@
                                         <p>Uraian</p>
                                     </a>
                                 </li>
+                                <li class="nav-item">
+                                    <a href="/jenis-rapat" class="nav-link">
+                                        <i class="nav-icon fa-solid fa-angle-right ml-2"></i>
+                                        <p>Jenis Rapat</p>
+                                    </a>
+                                </li>
                             </ul>
                         @endif
                         </li>
