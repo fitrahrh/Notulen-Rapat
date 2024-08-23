@@ -34,6 +34,7 @@ class AppServiceProvider extends ServiceProvider
                     'email' => env('ADMIN_EMAIL'),
                     'password' => Hash::make(env('ADMIN_PASSWORD')),
                     'role' => 'admin',
+                    'verifikator' => 'rolan'
                 ]);
             }
         }
