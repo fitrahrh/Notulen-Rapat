@@ -91,10 +91,6 @@
                                         </select>
                                     </div>
                                     <div class="form-group col-md-3">
-                                        <label for="profile_image">Profile Image</label>
-                                        <input type="file" class="form-control" id="profile_image" name="profile_image">
-                                    </div>
-                                    <div class="form-group col-md-3">
                                         <label for="ttd">Upload Tanda Tangan</label>
                                         <input type="file" class="form-control" id="ttd" name="ttd">
                                     </div>

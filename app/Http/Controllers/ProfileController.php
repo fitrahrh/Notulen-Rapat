@@ -27,7 +27,6 @@ class ProfileController extends Controller
             'name' => 'string|max:255',
             'email' => 'string|email|max:255|unique:users,email,' . $user->id_user . ',id_user',
             'password' => 'nullable|string|min:8|confirmed',
-            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
             'alamat' => 'nullable|string|max:255',
             'no_hp' => 'nullable|string|max:15',
             'jenis_kelamin' => 'nullable|in:Laki-laki,Perempuan',
@@ -40,12 +39,6 @@ class ProfileController extends Controller
         $pegawai->email = $request->email;
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
-        }
-        if ($request->hasFile('profile_image')) {
-            $file = $request->file('profile_image');
-            $filename = time() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('images/profile'), $filename);
-            $user->profile_image = $filename;
         }
         if ($request->hasFile('ttd')) {
             $file = $request->file('ttd');
@@ -74,7 +67,6 @@ class ProfileController extends Controller
                 'email' => 'nullable|string|email|max:255|unique:users,email,' . $user->id_user . ',id_user',
                 'current_password' => 'required_with:password|string',
                 'password' => 'nullable|string|confirmed',
-                'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
                 'alamat' => 'nullable|string|max:255',
                 'no_hp' => 'nullable|string|max:15',
                 'jenis_kelamin' => 'nullable|in:Laki-laki,Perempuan',
@@ -96,11 +88,6 @@ class ProfileController extends Controller
             if ($request->filled('email')) {
                 $user->email = $request->email;
                 $pegawai->email = $request->email;
-            }
-            if ($request->hasFile('profile_image')) {
-                $imageName = time().'.'.$request->profile_image->extension();
-                $request->profile_image->move(public_path('images'), $imageName);
-                $user->profile_image = $imageName;
             }
     
             $user->save();
