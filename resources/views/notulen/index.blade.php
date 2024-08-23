@@ -58,6 +58,7 @@
                                                 <button type="submit" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash-can"></i> Delete</button>
                                             </form>
                                             <button class="btn btn-info btn-sm" onclick="previewPDF('{{ route('notulen.generatePDF', $data->notulen_id) }}')"><i class="fa-solid fa-eye"></i> Preview PDF</button>
+                                            <button class="btn btn-warning btn-sm" onclick="editNotulen({{ $data->notulen_id }})"><i class="fa-solid fa-edit"></i> Edit</button>
                                         </td>
                                     </tr>
                                     @endforeach
@@ -160,6 +161,79 @@
                         </div>
                     </div>
 
+                    <!-- Modal Edit Notulen -->
+                    <div class="modal fade" id="editNotulenModal" tabindex="-1" role="dialog" aria-labelledby="editNotulenModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editNotulenModalLabel">Edit Notulen</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form id="editNotulenForm" action="" method="POST" enctype="multipart/form-data">
+    @csrf
+    @method('PUT')
+    <div class="modal-body">
+        <div class="form-group">
+            <label for="editText">Text</label>
+            <textarea id="editText" style="display:none"></textarea>
+            <textarea name="text" id="editHiddenInput" style="display:none"></textarea>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="editJenisSurat">Jenis Surat</label>
+                <input type="text" name="jenis_surat" id="editJenisSurat" class="form-control" required>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="editNomorSurat">Nomor Surat</label>
+                <input type="text" name="nomor_surat" id="editNomorSurat" class="form-control" required>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="editJadwalId">Jadwal</label>
+                <select name="jadwal_id" id="editJadwalId" class="form-control" required>
+                    @foreach($jadwal as $item)
+                        <option value="{{ $item->jadwal_id }}">{{ $item->name_rapat }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="editPicId">PIC</label>
+                <select name="pic_id" id="editPicId" class="form-control" required>
+                    @foreach($pegawai as $item)
+                        <option value="{{ $item->pegawai_id }}">{{ $item->nama_pegawai }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="editPenanggungJawabId">Penanggung Jawab</label>
+                <select name="penanggung_jawab_id" id="editPenanggungJawabId" class="form-control" required>
+                    @foreach($pegawai as $item)
+                        <option value="{{ $item->pegawai_id }}">{{ $item->nama_pegawai }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="editPencatatId">Pencatat</label>
+                <select name="pencatat_id" id="editPencatatId" class="form-control" required>
+                    @foreach($pegawai as $item)
+                        <option value="{{ $item->pegawai_id }}">{{ $item->nama_pegawai }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Update Notulen</button>
+    </div>
+</form>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Modal for PDF Preview -->
                     <div class="modal fade" id="pdfPreviewModal" tabindex="-1" role="dialog" aria-labelledby="pdfPreviewModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-xl" role="document">
@@ -184,7 +258,6 @@
 </div>
 
 @endsection
-
 @push('scripts')
 <link href="https://cdn.jsdelivr.net/npm/suneditor@latest/dist/css/suneditor.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/suneditor@latest/dist/suneditor.min.js"></script>
@@ -211,6 +284,45 @@ const editor = SUNEDITOR.create((document.querySelector('#editor') || '#editor')
 document.getElementById('addNotulenForm').addEventListener('submit', function() {
     document.getElementById('hiddenInput').value = editor.getContents();
 });
+
+// Initialize SunEditor for Edit Notulen
+const editEditor = SUNEDITOR.create((document.querySelector('#editText') || '#editText'), {
+    lang: SUNEDITOR_LANG['en'],
+    buttonList: [
+        ['undo', 'redo'],
+        ['font', 'fontSize', 'formatBlock'],
+        ['paragraphStyle', 'blockquote'],
+        ['bold', 'underline', 'italic', 'strike', 'subscript', 'superscript'],
+        ['fontColor', 'hiliteColor', 'textStyle'],
+        ['removeFormat'],
+        ['outdent', 'indent'],
+        ['align', 'horizontalRule', 'list', 'lineHeight'],
+        ['table', 'link', 'image', 'video', 'audio'],
+        ['fullScreen', 'showBlocks', 'codeView'],
+        ['preview', 'print']
+    ]
+});
+
+// Function to handle the edit button click
+function editNotulen(id) {
+    $.get('/notulen/' + id, function(data) {
+        $('#editNotulenForm').attr('action', '/notulen/' + id);
+        editEditor.setContents(data.text); // Populate SunEditor with existing data
+        $('#editJenisSurat').val(data.jenis_surat);
+        $('#editNomorSurat').val(data.nomor_surat);
+        $('#editJadwalId').val(data.jadwal_id);
+        $('#editPicId').val(data.pic_id);
+        $('#editPenanggungJawabId').val(data.penanggung_jawab_id);
+        $('#editPencatatId').val(data.pencatat_id);
+        $('#editNotulenModal').modal('show');
+    });
+}
+
+// Ensure the hidden input is updated before form submission
+document.getElementById('editNotulenForm').addEventListener('submit', function() {
+    document.getElementById('editHiddenInput').value = editEditor.getContents();
+});
+
 </script>
 @endpush
 

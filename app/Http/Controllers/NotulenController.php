@@ -92,6 +92,38 @@ class NotulenController extends Controller
         return redirect()->route('notulen.index')->with('success', 'Notulen added successfully');
     }
 
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'text' => 'required',
+            'jadwal_id' => 'required',
+            'jenis_surat' => 'required',
+            'nomor_surat' => 'required',
+            'pic_id' => 'required',
+            'penanggung_jawab_id' => 'required',
+            'pencatat_id' => 'required'
+        ]);
+    
+        $notulen = Notulen::findOrFail($id);
+        $notulen->text = $request->text;
+        $notulen->jenis_surat = $request->jenis_surat;
+        $notulen->nomor_surat = $request->nomor_surat;
+        $notulen->jadwal_id = $request->jadwal_id;
+        $notulen->pic_id = $request->pic_id;
+        $notulen->penanggung_jawab_id = $request->penanggung_jawab_id;
+        $notulen->pencatat_id = $request->pencatat_id;
+    
+        $notulen->save();
+    
+        return redirect()->route('notulen.index')->with('success', 'Notulen updated successfully');
+    }
+
+    public function show($id)
+    {
+        $notulen = Notulen::findOrFail($id);
+        return response()->json($notulen);
+    }
+
     public function downloadPDF($id)
     {
         set_time_limit(120);

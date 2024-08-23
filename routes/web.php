@@ -16,13 +16,13 @@ use App\Http\Controllers\NotulenController;
 use App\Http\Controllers\PdfController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\PasswordResetController;
-use App\Http\Controllers\JenisRapatController;
 
 Route::get('/pdf', [PdfController::class, 'generatePDF'])->middleware('auth');
 // Notulen
 Route::resource('notulen', NotulenController::class)->middleware('auth');
 Route::get('notulen/generatePDF/{id}', [NotulenController::class, 'generatePDF'])->name('notulen.generatePDF')->middleware('auth');
-
+Route::put('/notulen/{id}', [NotulenController::class, 'update'])->name('notulen.update')->middleware('auth');
+Route::get('/notulen/{id}', [NotulenController::class, 'show'])->name('notulen.show')->middleware('auth');
 
 // Menampilkan formulir untuk meminta link reset password
 Route::get('/password/reset', [PasswordResetController::class, 'showLinkRequestForm'])->name('password.request');
@@ -63,9 +63,6 @@ Route::resource('reports', ReportController::class)->middleware('auth');
 
 // route jadwal rapat
 Route::resource('jadwal-rapat', JadwalController::class)->middleware('auth');
-
-// route jenis rapat
-Route::resource('jenis-rapat', JenisRapatController::class)->middleware('auth');
 
 // route Uraian
 Route::resource('uraian', UraianController::class)->middleware('auth');
