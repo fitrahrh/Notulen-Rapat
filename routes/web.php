@@ -16,6 +16,8 @@ use App\Http\Controllers\NotulenController;
 use App\Http\Controllers\PdfController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\PasswordResetController;
+use App\Http\Controllers\JenisRapatController;
+
 
 Route::get('/pdf', [PdfController::class, 'generatePDF'])->middleware('auth');
 // Notulen
@@ -72,3 +74,6 @@ Route::resource('uraian', UraianController::class)->middleware('auth');
 Route::resource('kegiatan', KegiatanController::class)->middleware('auth');
 
 Route::resource('pegawai', PegawaiController::class)->middleware('auth');
+
+// route jenis rapat
+Route::resource('jenis-rapat', JenisRapatController::class)->middleware('auth');
