@@ -98,7 +98,7 @@
     <p>Notulis</p>
     <div class="ttd">
         @php
-            $ttdDefault = public_path('images/default-ttd.png');
+            $ttdDefault = public_path('images/default-ttd.jpg');
         @endphp
         @if($notulen->pic && $notulen->pic->user && $notulen->pic->user->ttd)
             @php
