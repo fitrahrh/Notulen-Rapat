@@ -14,6 +14,7 @@ class CreateJadwalsTableV3 extends Migration
             $table->date('tanggal');
             $table->time('jam_mulai');
             $table->time('jam_selesai');
+            $table->string('tempat_rapat');
             $table->bigInteger('mbis')-> nullable();
             $table->enum('rolan',['Sudah diambil','belum diambil'])->nullable();
             $table->enum('verifikasi',['Belum','Sudah'])->nullable();
