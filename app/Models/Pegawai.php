@@ -41,5 +41,10 @@ class Pegawai extends Model
     {
         return $this->belongsTo(Bidang::class, 'bidang_id');
     }
+
+    public function jadwal()
+    {
+        return $this->belongsToMany(Jadwal::class, 'jadwal_pegawai', 'pegawai_id', 'jadwal_id');
+    }
     
 }

@@ -64,4 +64,9 @@ class Jadwal extends Model
         return $this->belongsTo(Uraian::class, 'uraian_id', 'uraian_id');
     }
 
+    public function pegawai()
+    {
+        return $this->belongsToMany(Pegawai::class, 'jadwal_pegawai', 'jadwal_id', 'pegawai_id');
+    }
+
 }
