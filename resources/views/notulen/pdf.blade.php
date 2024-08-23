@@ -73,7 +73,7 @@
             right: 40px;
         }
         .footer p {
-            margin: 0;
+            margin-left: 25px;
         }
     </style>
 </head>
@@ -95,22 +95,25 @@
         <div>{!! $notulen->text !!}</div>
     </div>
     <div class="footer">
-        <p>Notulis</p>
-        <div class="ttd">
-            @if($notulen->user && $notulen->user->ttd)
-                @php
-                    $ttdPath = public_path('images/ttd/' . $notulen->user->ttd);
-                @endphp
-                @if(file_exists($ttdPath))
-                    <img src="file://{{ $ttdPath }}" alt="Pencatat Signature">
-                @else
-                    <p>Tanda tangan tidak tersedia</p>
-                @endif
+    <p>Notulis</p>
+    <div class="ttd">
+        @php
+            $ttdDefault = public_path('images/default-ttd.png');
+        @endphp
+        @if($notulen->pic && $notulen->pic->user && $notulen->pic->user->ttd)
+            @php
+                $ttdPath = public_path('images/ttd/' . $notulen->pic->user->ttd);
+            @endphp
+            @if(file_exists($ttdPath))
+                <img src="file://{{ $ttdPath }}" alt="Pencatat Signature">
             @else
-                <p>Tanda tangan tidak tersedia</p>
+                <img src="file://{{ $ttdDefault }}" alt="Default Signature">
             @endif
-        </div>
-        <p>{{ $notulen->pencatat ? $notulen->pencatat->nama_pegawai : 'N/A' }}</p>
+        @else
+            <img src="file://{{ $ttdDefault }}" alt="Default Signature">
+        @endif
     </div>
+    <p>{{ $notulen->pic ? $notulen->pic->nama_pegawai : 'N/A' }}</p>
+</div>
 </body>
 </html>
