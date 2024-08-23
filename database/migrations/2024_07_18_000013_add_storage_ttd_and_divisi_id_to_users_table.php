@@ -9,7 +9,6 @@ return new class extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('profile_image')->nullable();
             $table->string('ttd')->nullable();
             $table->unsignedBigInteger('pegawai_id')->nullable();
             $table->foreign('pegawai_id')->references('pegawai_id')->on('pegawai')->onDelete('cascade');

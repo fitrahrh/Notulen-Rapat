@@ -24,6 +24,7 @@ class User extends Authenticatable
         'ttd',
         'pegawai_id', // Pastikan pegawai_id bisa diisi
         'role',
+        'verifikator'
     ];
 
     protected $hidden = [

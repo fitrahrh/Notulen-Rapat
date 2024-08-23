@@ -10,12 +10,14 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->enum('role', ['admin', 'user'])->nullable();
+            $table->enum('verifikator', ['rolan'])->nullable();
         });
     }
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('role');
+            $table->dropColumn('verifikator');
         });
     }
 };
