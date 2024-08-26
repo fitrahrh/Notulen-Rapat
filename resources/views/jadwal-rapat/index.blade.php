@@ -51,7 +51,7 @@
                                         <td>{{ $item->jam_mulai . ' - ' .$item->jam_selesai }}</td>
                                         <td>{{ $item->tempat_rapat }}</td>
                                         <td>
-                                            <button class="btn btn-success btn-sm mr-1" data-toggle="modal" data-target="#addNotulenModal{{ $item->jadwal_id }}">Add Notulen</button>
+                                            <button class="btn btn-success btn-sm mr-1" data-toggle="modal" data-target="#addNotulenModal{{ $item->jadwal_id }}"><i class="fa-solid fa-file"></i> Add Notulen</button>
                                             <button class="btn btn-warning btn-sm mr-1" data-toggle="modal" data-target="#editJadwalModal{{ $item->jadwal_id }}">
                                                 <i class="fa-solid fa-pen"></i> Edit
                                             </button>
@@ -246,6 +246,14 @@
                                             <input type="date" name="tanggal" class="form-control" required>
                                         </div>
                                         <div class="form-group">
+                                            <label for="peserta">Peserta Rapat</label><br>
+                                            <select id="peserta" name="peserta[]" class="form-control" multiple="multiple" required>
+                                                @foreach ($pegawai as $peg)
+                                                <option value="{{ $peg->pegawai_id }}">{{ $peg->email }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
                                             <label for="jam_mulai">Jam Mulai</label>
                                             <input type="time" name="jam_mulai" class="form-control" required>
                                         </div>
@@ -288,9 +296,25 @@
 @endsection
 
 @push('scripts')
+<script>
+$(document).ready(function() {
+    $('#peserta').select2({
+        tags: true,
+        tokenSeparators: [',', ' '],
+        allowClear: true,
+        placeholder: "Cari nama peserta",
+    });
+});
+</script>
+@endpush
+
+@push('scripts')
 <link href="https://cdn.jsdelivr.net/npm/suneditor@latest/dist/css/suneditor.min.css" rel="stylesheet">
+
 <script src="https://cdn.jsdelivr.net/npm/suneditor@latest/dist/suneditor.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/suneditor@latest/src/lang/ko.js"></script>
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
 @foreach ($jadwal as $item)
 const editor{{ $item->jadwal_id }} = SUNEDITOR.create((document.querySelector('#editor{{ $item->jadwal_id }}') || '#editor{{ $item->jadwal_id }}'), {
@@ -317,3 +341,4 @@ document.getElementById('addNotulenForm{{ $item->jadwal_id }}').addEventListener
 @endforeach
 </script>
 @endpush
+
