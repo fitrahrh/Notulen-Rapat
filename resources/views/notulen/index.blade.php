@@ -26,7 +26,9 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="text-right">
-                                <button class="btn btn-primary" data-toggle="modal" data-target="#addNotulenModal"><i class="fa-solid fa-plus"></i> Add Notulen</button>
+                                <a href="jadwal-rapat" class="btn btn-warning btn-sm">
+                                <i class="fa-solid fa-arrow-rotate-left"></i> Back
+                                </a>
                             </div>
                         </div>
                         <div class="card-body">

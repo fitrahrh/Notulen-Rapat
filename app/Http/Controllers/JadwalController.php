@@ -9,9 +9,14 @@ use App\Models\Dpa;
 use App\Models\Uraian;
 use App\Models\Pegawai;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use App\Models\Bidang;
+use App\Models\Jabatan;
 use App\Models\Notulen;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Exception;
+
 
 class JadwalController extends Controller
 {       
@@ -20,10 +25,10 @@ class JadwalController extends Controller
     {
         // Dapatkan user yang sedang login
         $user = auth()->user();
-
+    
         if ($user->role === 'admin') {
             $jadwal = Jadwal::all();
-        } else{
+        } else {
             // Dapatkan pegawai yang terkait dengan user yang sedang login
             $pegawai = $user->pegawai;
     
@@ -35,14 +40,18 @@ class JadwalController extends Controller
                 $query->where('bidang_id', $bidang->bidang_id);
             })->get();
         }
-
+    
         $kegiatan = Kegiatan::all();
         $dpa = Dpa::all();
         $uraian = Uraian::all();
         $jenis = Jenisrapat::all();
 
-        $pegawai = Pegawai::with('bidang')->get();
-        return view('jadwal-rapat.index', compact('jadwal', 'kegiatan', 'dpa', 'uraian', 'jenis'));
+        // Pastikan $pegawai didefinisikan sebelum digunakan dalam compact
+        if (!isset($pegawai)) {
+            $pegawai = Pegawai::with('bidang')->get();
+        }
+    
+        return view('jadwal-rapat.index', compact('jadwal', 'kegiatan', 'dpa', 'uraian', 'jenis', 'pegawai'));
     }
 
     public function create()

@@ -45,7 +45,7 @@ class NotulenController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'text' => 'required',
+            'text' => 'required|string',
             'jadwal_id' => 'required',
             'jenis_surat' => 'required',
             'nomor_surat' => 'required',
