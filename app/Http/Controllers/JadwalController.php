@@ -113,6 +113,24 @@ class JadwalController extends Controller
         return view('jadwal-rapat.show', compact('jadwal'));
     }
 
+    public function destroy($id)
+    {
+        try{
+            $jadwal = Jadwal::findOrFail($id);
+
+            $relatedRecordsCount = Notulen::where('jadwal_id', $id)->count();
+
+            if ($relatedRecordsCount > 0) {
+                return redirect()->route('jadwal-rapat.index')->with('error', 'Cannot delete jadwal because it has related notulen records.');
+            }
+
+            $jadwal->delete();
+            return redirect()->route('jadwal-rapat.index')->with('success', 'Jadwal deleted successfully');            
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('jadwal-rapat.index')->with('error', 'Jadwal not found');
+        }
+    }
+    
     public function edit($id)
 {
     $jadwal = Jadwal::findOrFail($id);
