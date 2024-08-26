@@ -13,7 +13,7 @@ class Jadwal extends Model
     protected $primaryKey = 'jadwal_id';
     protected $fillable = [
         'name_rapat',
-        'jenis_rapat', 
+        'jenis_rapat_id', // Pastikan ini adalah kolom yang benar
         'tanggal', 
         'jam_mulai',
         'jam_selesai',
@@ -39,7 +39,6 @@ class Jadwal extends Model
         });
     }
     
-
     public function user()
     {
         return $this->belongsTo(User::class, 'id_user', 'id');
@@ -64,9 +63,13 @@ class Jadwal extends Model
         return $this->belongsTo(Uraian::class, 'uraian_id', 'uraian_id');
     }
 
+    public function jenis_rapat()
+    {
+        return $this->belongsTo(Jenisrapat::class, 'jenis_rapat_id', 'jenis_rapat_id');
+    }
+
     public function pegawai()
     {
         return $this->belongsToMany(Pegawai::class, 'jadwal_pegawai', 'jadwal_id', 'pegawai_id');
     }
-
 }

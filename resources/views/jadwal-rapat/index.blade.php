@@ -38,14 +38,9 @@
                                         <th>DPA</th>
                                         <th>Jenis Rapat</th>
                                         <th>Tanggal</th>
-                                        <th>Jam Mulai</th>
-                                        <th>Jam Selesai</th>
+                                        <th>Waktu</th>
                                         <th>Tempat</th>
                                         <th>kegiatan</th>
-                                        <th>MBIS</th>
-                                        <th>Rolan</th>
-                                        <th>Verifikasi</th>
-                                        <th>Keterangan</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -55,16 +50,11 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $item->name_rapat }}</td>
                                         <td>{{ $item->dpa->name_dpa }}</td>
-                                        <td>{{ $item->jenis_rapat }}</td>
+                                        <td>{{ $item->jenis_rapat->jenis_rapat }}</td>
                                         <td>{{ $item->tanggal }}</td>
-                                        <td>{{ $item->jam_mulai }}</td>
-                                        <td>{{ $item->jam_selesai }}</td>
+                                        <td>{{ $item->jam_mulai . ' - ' .$item->jam_selesai }}</td>
                                         <td>{{ $item->tempat_rapat }}</td>
                                         <td>{{ $item->kegiatan->name_kegiatan }}</td>
-                                        <td>{{ $item->mbis }}</td>
-                                        <td>{{ $item->rolan }}</td>
-                                        <td>{{ $item->verifikasi }}</td>
-                                        <td>{{ $item->keterangan }}</td>
                                         <td>
                                             <button class="btn btn-warning btn-sm mr-1" data-toggle="modal" data-target="#editJadwalModal{{ $item->jadwal_id }}">
                                                 <i class="fa-solid fa-pen"></i> Edit
@@ -96,8 +86,12 @@
                                                             <input type="text" name="name_rapat" class="form-control" value="{{ old('name_rapat', $item->name_rapat) }}" required>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label for="jenis_rapat">Jenis Rapat</label>
-                                                            <input type="text" name="jenis_rapat" class="form-control" value="{{ old('jenis_rapat', $item->jenis_rapat) }}" required>
+                                                            <label for="jenis_rapat_id">Jenis Rapat</label>
+                                                            <select name="jenis_rapat_id" class="form-control" required>
+                                                                @foreach ($jenis as $jr)
+                                                                <option value="{{ $jr->jenis_rapat_id }}" {{ $item->jenis_rapat_id == $jr->jenis_rapat_id  ? 'selected' : ''}}>{{$jr->jenis_rapat}}</option>
+                                                                @endforeach
+                                                            </select>
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="tanggal">Tanggal</label>
@@ -105,59 +99,25 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="jam_mulai">Jam Mulai</label>
-                                                            <input type="time" name="jam_mulai" class="form-control" value="{{ old('jam_mulai', $item->jam_mulai) }}" required>
+                                                            <input type="time" name="jam_mulai" class="form-control" value="{{ old('jam_mulai', \Carbon\Carbon::parse($item->jam_mulai)->format('H:i')) }}" required>
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="jam_selesai">Jam Selesai</label>
-                                                            <input type="time" name="jam_selesai" class="form-control" value="{{ old('jam_selesai', $item->jam_selesai) }}" required>
+                                                            <input type="time" name="jam_selesai" class="form-control" value="{{ old('jam_selesai', \Carbon\Carbon::parse($item->jam_selesai)->format('H:i')) }}" required>
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="tempat_rapat">Tempat</label>
                                                             <input type="text" name="tempat_rapat" class="form-control" value="{{ old('tempat_rapat', $item->tempat_rapat) }}" required>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label for="mbis">MBIS</label>
-                                                            <input type="number" name="mbis" class="form-control" value="{{ old('mbis', $item->mbis) }}" required>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="rolan">Rolan</label>
-                                                            <select name="rolan" class="form-control" required>
-                                                                <option value="Sudah diambil" {{ old('rolan', $item->rolan) == 'Sudah diambil' ? 'selected' : '' }}>Sudah diambil</option>
-                                                                <option value="Belum diambil" {{ old('rolan', $item->rolan) == 'Belum diambil' ? 'selected' : '' }}>Belum diambil</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="verifikasi">Verifikasi</label>
-                                                            <select name="verifikasi" class="form-control" required>
-                                                                <option value="Belum" {{ old('verifikasi', $item->verifikasi) == 'Belum' ? 'selected' : '' }}>Belum</option>
-                                                                <option value="Sudah" {{ old('verifikasi', $item->verifikasi) == 'Sudah' ? 'selected' : '' }}>Sudah</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="form-group">
                                                             <label for="keterangan">Keterangan</label>
                                                             <textarea name="keterangan" class="form-control" required>{{ old('keterangan', $item->keterangan) }}</textarea>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="kegiatan_id">Kegiatan</label>
-                                                            <select name="kegiatan_id" class="form-control" required>
-                                                                @foreach ($kegiatan as $kg)
-                                                                <option value="{{ $kg->kegiatan_id }}" {{ $item->kegiatan_id == $kg->kegiatan_id ? 'selected' : '' }}>{{ $kg->name_kegiatan }}</option>
-                                                                @endforeach
-                                                            </select>
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="uraian_id">Uraian</label>
                                                             <select name="uraian_id" class="form-control" required>
                                                                 @foreach ($uraian as $ur)
                                                                 <option value="{{ $ur->uraian_id }}" {{ $item->uraian_id == $ur->uraian_id ? 'selected' : '' }}>{{ $ur->name_uraian }}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="dpa_id">DPA</label>
-                                                            <select name="dpa_id" class="form-control" required>
-                                                                @foreach ($dpa as $dp)
-                                                                <option value="{{ $dp->dpa_id }}" {{ $item->dpa_id == $dp->dpa_id ? 'selected' : '' }}>{{ $dp->name_dpa }}</option>
                                                                 @endforeach
                                                             </select>
                                                         </div>
@@ -194,8 +154,12 @@
                                             <input type="text" name="name_rapat" class="form-control" required>
                                         </div>
                                         <div class="form-group">
-                                            <label for="jenis_rapat">Jenis Rapat</label>
-                                            <input type="text" name="jenis_rapat" class="form-control" required>
+                                            <label for="jenis_rapat_id">Jenis Rapat</label>
+                                            <select name="jenis_rapat_id" class="form-control" required>
+                                                @foreach ($jenis as $jr)
+                                                <option value="{{ $jr->jenis_rapat_id }}">{{ $jr->jenis_rapat }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                         <div class="form-group">
                                             <label for="tanggal">Tanggal</label>
@@ -214,48 +178,14 @@
                                             <input type="text" name="tempat_rapat" class="form-control" required>
                                         </div>
                                         <div class="form-group">
-                                            <label for="mbis">MBIS</label>
-                                            <input type="number" name="mbis" class="form-control" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="rolan">Rolan</label>
-                                            <select name="rolan" class="form-control" required>
-                                                <option value="Sudah diambil">Sudah diambil</option>
-                                                <option value="Belum diambil">Belum diambil</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="verifikasi">Verifikasi</label>
-                                            <select name="verifikasi" class="form-control" required>
-                                                <option value="Belum">Belum</option>
-                                                <option value="Sudah">Sudah</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
                                             <label for="keterangan">Keterangan</label>
                                             <textarea name="keterangan" class="form-control" required></textarea>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="kegiatan_id">Kegiatan</label>
-                                            <select name="kegiatan_id" class="form-control" required>
-                                                @foreach ($kegiatan as $kg)
-                                                <option value="{{ $kg->kegiatan_id }}">{{ $kg->name_kegiatan }}</option>
-                                                @endforeach
-                                            </select>
                                         </div>
                                         <div class="form-group">
                                             <label for="uraian_id">Uraian</label>
                                             <select name="uraian_id" class="form-control" required>
                                                 @foreach ($uraian as $ur)
                                                 <option value="{{ $ur->uraian_id }}">{{ $ur->name_uraian }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="dpa_id">DPA</label>
-                                            <select name="dpa_id" class="form-control" required>
-                                                @foreach ($dpa as $dp)
-                                                <option value="{{ $dp->dpa_id }}">{{ $dp->name_dpa }}</option>
                                                 @endforeach
                                             </select>
                                         </div>

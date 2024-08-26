@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Jadwal;
+use App\Models\Jenisrapat;
 use App\Models\Kegiatan;
 use App\Models\Dpa;
 use App\Models\Uraian;
@@ -10,6 +11,7 @@ use App\Models\Pegawai;
 use Illuminate\Http\Request;
 use App\Models\Notulen;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Exception;
 
 class JadwalController extends Controller
 {       
@@ -37,9 +39,10 @@ class JadwalController extends Controller
         $kegiatan = Kegiatan::all();
         $dpa = Dpa::all();
         $uraian = Uraian::all();
+        $jenis = Jenisrapat::all();
 
         $pegawai = Pegawai::with('bidang')->get();
-        return view('jadwal-rapat.index', compact('jadwal', 'kegiatan', 'dpa', 'uraian'));
+        return view('jadwal-rapat.index', compact('jadwal', 'kegiatan', 'dpa', 'uraian', 'jenis'));
     }
 
     public function create()
@@ -47,31 +50,54 @@ class JadwalController extends Controller
         $kegiatan = Kegiatan::all();
         $dpa = Dpa::all();
         $uraian = Uraian::all();
-        return view('jadwal-rapat.create', compact('kegiatan', 'dpa', 'uraian'));
+        $jenis = Jenisrapat::all();
+        $pegawai = Pegawai::with('bidang')->get();
+        return view('jadwal-rapat.create', compact('kegiatan', 'dpa', 'uraian', 'jenis', 'pegawai'));
     }
 
     public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'name_rapat' => 'required',
-            'jenis_rapat' => 'required',
-            'tanggal' => 'required|date',
-            'jam_mulai' => 'required|date_format:H:i',
-            'jam_selesai' => 'required|date_format:H:i',
-            'tempat_rapat' => 'required',
-            'mbis' => 'required',
-            'rolan' => 'required|in:Sudah diambil,Belum diambil',
-            'verifikasi' => 'required|in:Belum,Sudah',
-            'keterangan' => 'required|nullable',
-            'dpa_id' => 'required|exists:dpa,dpa_id',
-            'kegiatan_id' => 'required|exists:kegiatan,kegiatan_id',
-            'uraian_id' => 'required|exists:uraian,uraian_id',
+{
+    $request->validate([
+        'name_rapat' => 'required',
+        'jenis_rapat_id' => 'required|exists:jenis_rapat,jenis_rapat_id',
+        'tanggal' => 'required|date',
+        'jam_mulai' => 'required|date_format:H:i',
+        'jam_selesai' => 'required|date_format:H:i',
+        'tempat_rapat' => 'required',
+        'keterangan' => 'nullable',
+        'uraian_id' => 'required|exists:uraian,uraian_id',
+    ]);
+
+    try {
+        $uraian = Uraian::findOrFail($request->uraian_id);
+        $kegiatan = $uraian->kegiatan;
+        $dpa = $kegiatan->dpa;
+
+        $jadwal = new Jadwal([
+            'name_rapat' => $request->name_rapat,
+            'jenis_rapat_id' => $request->jenis_rapat_id,
+            'tanggal' => $request->tanggal,
+            'jam_mulai' => $request->jam_mulai,
+            'jam_selesai' => $request->jam_selesai,
+            'tempat_rapat' => $request->tempat_rapat,
+            'keterangan' => $request->keterangan,
+            'uraian_id' => $request->uraian_id,
+            'kegiatan_id' => $kegiatan->kegiatan_id,
+            'dpa_id' => $dpa->dpa_id,
         ]);
 
-        Jadwal::create($validated);
+        // Debugging
+        \Log::info('Jadwal data:', $jadwal->toArray());
 
-        return redirect()->route('jadwal-rapat.index')->with('success', 'Jadwal created successfully');
+        $jadwal->save();
+
+        return redirect()->route('jadwal-rapat.index')->with('success', 'Jadwal rapat berhasil disimpan.');
+    } catch (Exception $e) {
+        \Log::error('Error saving jadwal:', ['error' => $e->getMessage()]);
+        return redirect()->back()->withErrors(['error' => 'Terjadi kesalahan saat menyimpan jadwal rapat.']);
     }
+}
+
 
     public function show(Jadwal $jadwal)
     {
@@ -79,57 +105,70 @@ class JadwalController extends Controller
     }
 
     public function edit($id)
-    {
-        $jadwal = Jadwal::findOrFail($id);
-        $kegiatan = Kegiatan::all();
-        $dpa = Dpa::all();
-        $uraian = Uraian::all();
-        return view('jadwal-rapat.edit', compact('jadwal', 'kegiatan', 'dpa', 'uraian'));
-    }
+{
+    $jadwal = Jadwal::findOrFail($id);
+    $kegiatan = Kegiatan::all();
+    $dpa = Dpa::all();
+    $uraian = Uraian::all();
+    $jenisRapat = Jenisrapat::all(); // Tambahkan ini jika Anda memerlukan jenis rapat
+    return view('jadwal-rapat.edit', compact('jadwal', 'kegiatan', 'dpa', 'uraian', 'jenisRapat'));
+}
 
-    public function update(Request $request, $id)
-    {
-        $jadwal = Jadwal::findOrFail($id);
+public function update(Request $request, $id)
+{
+    $jadwal = Jadwal::findOrFail($id);
+    \Log::info('Request data:', $request->all());
+
+    try {
+        $request->merge([
+            'jam_mulai' => \Carbon\Carbon::parse($request->jam_mulai)->format('H:i'),
+            'jam_selesai' => \Carbon\Carbon::parse($request->jam_selesai)->format('H:i'),
+        ]);
 
         $validated = $request->validate([
             'name_rapat' => 'required',
-            'jenis_rapat' => 'required',
+            'jenis_rapat_id' => 'required|exists:jenis_rapat,jenis_rapat_id',
             'tanggal' => 'required|date',
-            'jam_mulai' => 'required',
-            'jam_selesai' => 'required',
+            'jam_mulai' => 'required|date_format:H:i',
+            'jam_selesai' => 'required|date_format:H:i',
             'tempat_rapat' => 'required',
-            'mbis' => 'required',
-            'rolan' => 'required|in:Sudah diambil,Belum diambil',
-            'verifikasi' => 'required|in:Belum,Sudah',
-            'keterangan' => 'required|nullable',
-            'dpa_id' => 'required|exists:dpa,dpa_id',
-            'kegiatan_id' => 'required|exists:kegiatan,kegiatan_id',
+            'keterangan' => 'nullable',
             'uraian_id' => 'required|exists:uraian,uraian_id',
         ]);
 
-        $jadwal->update($validated);
+        \Log::info('Validated data:', $validated);
+
+        $uraian = Uraian::findOrFail($request->uraian_id);
+        $kegiatan = $uraian->kegiatan;
+        $dpa = $kegiatan->dpa;
+
+        \Log::info('Related data:', [
+            'uraian' => $uraian,
+            'kegiatan' => $kegiatan,
+            'dpa' => $dpa,
+        ]);
+
+        $jadwal->update([
+            'name_rapat' => $request->name_rapat,
+            'jenis_rapat_id' => $request->jenis_rapat_id,
+            'tanggal' => $request->tanggal,
+            'jam_mulai' => $request->jam_mulai,
+            'jam_selesai' => $request->jam_selesai,
+            'tempat_rapat' => $request->tempat_rapat,
+            'keterangan' => $request->keterangan,
+            'uraian_id' => $request->uraian_id,
+            'kegiatan_id' => $kegiatan->kegiatan_id,
+            'dpa_id' => $dpa->dpa_id,
+        ]);
+
+        \Log::info('Jadwal updated successfully');
 
         return redirect()->route('jadwal-rapat.index')->with('success', 'Jadwal updated successfully');
+    } catch (Exception $e) {
+        \Log::error('Error updating jadwal:', ['error' => $e->getMessage()]);
+        return redirect()->back()->withErrors(['error' => 'Terjadi kesalahan saat mengupdate jadwal rapat.']);
     }
-
-    public function destroy($id)
-    {
-        try{
-            $jadwal = Jadwal::findOrFail($id);
-    
-            $relatedRecordsCount = Notulen::where('jadwal_id', $id)->count();
-    
-            if ($relatedRecordsCount > 0) {
-                return redirect()->route('jadwal-rapat.index')->with('error', 'Cannot delete jadwal because it has related notulen records.');
-            }
-    
-            $jadwal->delete();
-            return redirect()->route('jadwal-rapat.index')->with('success', 'Jadwal deleted successfully');            
-        } catch (ModelNotFoundException $e) {
-            return redirect()->route('jadwal-rapat.index')->with('error', 'Jadwal not found');
-        }
-    }
-
+}
     public function getJadwal()
     {
         $jadwal = Jadwal::all();

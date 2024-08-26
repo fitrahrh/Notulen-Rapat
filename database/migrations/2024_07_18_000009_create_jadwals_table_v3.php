@@ -10,7 +10,6 @@ class CreateJadwalsTableV3 extends Migration
         Schema::create('jadwal', function (Blueprint $table) {
             $table->id('jadwal_id');
             $table->string('name_rapat');
-            $table->string('jenis_rapat');
             $table->date('tanggal');
             $table->time('jam_mulai');
             $table->time('jam_selesai');
