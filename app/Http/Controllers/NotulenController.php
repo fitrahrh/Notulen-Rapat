@@ -273,6 +273,12 @@ class NotulenController extends Controller
     {
         $notulen = Notulen::findOrFail($id);
 
+        $relatedRecordsCount = Jadwal::where('notulen_id', $id)->count();
+
+        if ($relatedRecordsCount > 0) {
+            return redirect()->route('notulen.index')->with('error', 'Cannot delete notulen because it has related Jadwal records.');
+        }
+
         // Delete related files
         if ($notulen->surat_undangan) {
             Storage::delete('public/files/' . $notulen->surat_undangan);

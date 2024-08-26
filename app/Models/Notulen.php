@@ -3,6 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Exception;
 
 class Notulen extends Model
 {
@@ -37,6 +42,12 @@ class Notulen extends Model
             Jadwal::where('jadwal_id', $notulen->jadwal_id)->update([
                 'notulen_id' => $notulen->notulen_id,
             ]);
+        });
+        
+        static::deleting(function ($notulen) {
+            if ($notulen->jadwal()->count() > 0) {
+                throw new Exception("Cannot delete Notulen because it has related Jadwal records.");
+            }
         });
     }    public function pic()
     {
