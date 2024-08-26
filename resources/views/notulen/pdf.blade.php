@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,6 +9,12 @@
         }
         h1, h2, h3, h4, h5, h6 {
             font-weight: bold;
+        }
+        p {
+            margin: 10px 0;
+        }
+        ul, ol {
+            margin: 10px 0 10px 20px;
         }
         table {
             width: 100%;
@@ -30,17 +35,50 @@
             max-width: 100%;
             height: auto;
         }
-        .header, .content, .footer {
+
+        .header, .content {
+            text-align: center;
+        }
+        .header h1, .header h3 {
+            margin: 0;
+        }
+        .content p {
+            margin: 5px 0;
+        }
+        .content p strong {
+            display: inline-block;
+            width: 150px;
             text-align: left;
         }
+        .signature {
+            margin-top: 50px;
+            text-align: right;
+        }
+        .signature p {
+            margin: 0;
+        }
+        .ttd {
+            margin-top: 10px;
+        }
         .ttd img {
-            width: 150px;
+            width: 150px; /* Sesuaikan ukuran gambar */
             height: auto;
+        }
+        .content, .footer {
+            text-align: left;
+        }
+        .footer {
+            position: absolute;
+            bottom: 40px;
+            right: 40px;
+        }
+        .footer p {
+            margin: 0;
         }
     </style>
 </head>
 <body>
-    <div class="header" style="text-align: center;">
+    <div class="header">
         <h1>NOTULEN</h1>
         <h3>RAPAT DOMAIN APLIKASI</h3>
     </div>
@@ -54,6 +92,7 @@
         <p><strong>Pencatat:</strong> {{ $notulen->pencatat->nama_pegawai }}</p>
         <p><strong>Peserta Rapat:</strong> Daftar Terlampir</p>
         <p><strong>Kesimpulan:</strong></p>
+        <div>{!! $notulen->text !!}</div>
     </div>
     <div class="footer" style="text-align: right;">
         <p>Notulis</p>
@@ -76,5 +115,6 @@
         </div>
         <p>{{ $notulen->pic ? $notulen->pic->nama_pegawai : 'N/A' }}</p>
     </div>
+
 </body>
 </html>
