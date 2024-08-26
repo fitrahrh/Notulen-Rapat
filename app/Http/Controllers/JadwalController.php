@@ -26,7 +26,7 @@ class JadwalController extends Controller
         // Dapatkan user yang sedang login
         $user = auth()->user();
     
-        if ($user->role === 'admin') {
+        if (in_array($user->role, ['user', 'admin'])) {
             $jadwal = Jadwal::all();
         } else {
             // Dapatkan pegawai yang terkait dengan user yang sedang login
@@ -227,7 +227,7 @@ public function update(Request $request, $id)
         $page = $request->query('page', 1);
         $size = $request->query('size', 10);
 
-        if ($user->role === 'admin') {
+        if (in_array($user->role, ['user', 'admin'])) {
             $jadwalQuery = Jadwal::query();
         } else {
             // Dapatkan pegawai yang terkait dengan user yang sedang login
@@ -299,7 +299,7 @@ public function update(Request $request, $id)
             $size = $request->query('size', 10);
     
             // Buat query dasar berdasarkan peran user
-            if ($user->role === 'admin') {
+            if (in_array($user->role, ['user', 'admin'])) {
                 $jadwalQuery = Jadwal::query();
             } else {
                 // Dapatkan pegawai yang terkait dengan user yang sedang login

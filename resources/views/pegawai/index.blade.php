@@ -30,7 +30,8 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <table id="example1" class="table table-striped table-bordered table-hover text-center" style="width: 100%">
+                        <div class="table-scroll">
+                            <table class="table table-striped table-bordered table-hover text-center" style="width: 100%">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -149,6 +150,7 @@
                                 </tbody>
                             </table>
                         </div>
+                        </div>
                     </div>
 
                     <!-- Add Modal -->
@@ -226,7 +228,14 @@
 </div>
 
 @endsection
+@push('styles')
+<style>
+.table-scroll {
+    overflow-x: auto;
+}
 
+</style>
+@endpush
 @push('scripts')
 <script>
     $(document).ready(function () {
