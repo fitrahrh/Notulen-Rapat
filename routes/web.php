@@ -65,6 +65,7 @@ Route::resource('reports', ReportController::class)->middleware('auth');
 
 // route jadwal rapat
 Route::resource('jadwal-rapat', JadwalController::class)->middleware('auth');
+Route::put('/jadwal-rapat/editrolan/{id}', [JadwalController::class, 'editrolan'])->name('jadwal-rapat.editrolan')->middleware('auth');
 
 // route Uraian
 Route::resource('uraian', UraianController::class)->middleware('auth');

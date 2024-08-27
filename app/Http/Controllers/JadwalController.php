@@ -196,6 +196,29 @@ public function update(Request $request, $id)
         return redirect()->back()->withErrors(['error' => 'Terjadi kesalahan saat mengupdate jadwal rapat.']);
     }
 }
+
+public function editrolan(Request $request, $id)
+{
+    if (auth()->user()->verifikator !== 'rolan') {
+        return redirect()->back()->with('error', 'Anda tidak memiliki akses ke halaman ini.');
+    }
+    $jadwal = Jadwal::findOrFail($id);
+
+    $request->validate([
+        'mbis' => 'nullable|int',
+        'rolan' => 'nullable|in:Sudah diambil,belum diambil',
+        'verifikasi' => 'nullable|in:Belum,Sudah',
+    ]);
+
+    $jadwal->update([
+        'mbis' => $request->mbis,
+        'rolan' => $request->rolan,
+        'verifikasi' => $request->verifikasi,
+    ]);
+
+    return redirect()->route('jadwal-rapat.index')->with('success', 'Jadwal updated successfully');
+}
+
     public function getJadwal()
     {
         $jadwal = Jadwal::all();

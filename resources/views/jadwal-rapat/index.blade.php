@@ -55,6 +55,7 @@
                                             <button class="btn btn-warning btn-sm mr-1" data-toggle="modal" data-target="#editJadwalModal{{ $item->jadwal_id }}">
                                                 <i class="fa-solid fa-pen"></i> Edit
                                             </button>
+                                            <button class="btn btn-warning btn-sm mr-1" data-toggle="modal" data-target="#editRolan{{ $item->jadwal_id }}"><i class="fa-solid fa-pen"></i> Rolan</button>
                                             <form action="{{ route('jadwal-rapat.destroy', $item->jadwal_id) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
@@ -208,6 +209,47 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <!-- Modal Edit Rolan-->
+                                    <div class="modal fade" id="editRolan{{ $item->jadwal_id }}" tabindex="-1" role="dialog" aria-labelledby="editJadwalModalLabel{{ $item->jadwal_id }}" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="editJadwalModalLabel{{ $item->jadwal_id }}">Edit Rolan</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <form action="{{ route('jadwal-rapat.editrolan', $item->jadwal_id) }}" method="POST">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <div class="modal-body">
+                                                    <div class="form-group">
+                                                            <label for="mbis">MBIS</label>
+                                                            <input type="number" name="mbis" class="form-control" value="{{ old('mbis', $item->mbis) }}" required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="rolan">Rolan</label>
+                                                            <select name="rolan" class="form-control" required>
+                                                                <option value="Sudah diambil" {{ old('rolan', $item->rolan) == 'Sudah diambil' ? 'selected' : '' }}>Sudah diambil</option>
+                                                                <option value="Belum diambil" {{ old('rolan', $item->rolan) == 'Belum diambil' ? 'selected' : '' }}>Belum diambil</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="verifikasi">Verifikasi</label>
+                                                            <select name="verifikasi" class="form-control" required>
+                                                                <option value="Belum" {{ old('verifikasi', $item->verifikasi) == 'Belum' ? 'selected' : '' }}>Belum</option>
+                                                                <option value="Sudah" {{ old('verifikasi', $item->verifikasi) == 'Sudah' ? 'selected' : '' }}>Sudah</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                        <button type="submit" class="btn btn-primary">Save changes</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>                                    
                                     @endforeach
 
                                 </tbody>
@@ -246,17 +288,17 @@
                                             <input type="date" name="tanggal" class="form-control" required>
                                         </div>
                                         <div class="form-group">
-    <label for="peserta">Peserta Rapat</label><br>
-    <select id="peserta" name="peserta[]" class="form-control" multiple="multiple" required>
-        @foreach ($pegawai as $peg)
-            @if(is_object($peg))
-                <option value="{{ $peg->pegawai_id }}">{{ $peg->email }}</option>
-            @else
-                <option value="">Invalid Data</option>
-            @endif
-        @endforeach
-    </select>
-</div>
+                                            <label for="peserta">Peserta Rapat</label><br>
+                                            <select id="peserta" name="peserta[]" class="form-control" multiple="multiple" required>
+                                                @foreach ($pegawai as $peg)
+                                                    @if(is_object($peg))
+                                                        <option value="{{ $peg->pegawai_id }}">{{ $peg->email }}</option>
+                                                    @else
+                                                        <option value="">Invalid Data</option>
+                                                    @endif
+                                                @endforeach
+                                            </select>
+                                        </div>
                                         <div class="form-group">
                                             <label for="jam_mulai">Jam Mulai</label>
                                             <input type="time" name="jam_mulai" class="form-control" required>
