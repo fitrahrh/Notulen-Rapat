@@ -151,7 +151,7 @@
                         @endif
                     </div>
                     <div class="info">
-                        <a href="profile" class="d-block">{{ auth()->user()->name }}</a>
+                        <a href="{{ route('profile.index') }}" class="d-block">{{ auth()->user()->name }}</a>
                     </div>
                 </div>
 

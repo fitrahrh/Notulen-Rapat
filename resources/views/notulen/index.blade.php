@@ -26,7 +26,7 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="text-right">
-                                <a href="jadwal-rapat" class="btn btn-warning btn-sm">
+                                <a href="{{ route('jadwal-rapat.index') }}" class="btn btn-warning btn-sm">
                                 <i class="fa-solid fa-arrow-rotate-left"></i> Back
                                 </a>
                             </div>

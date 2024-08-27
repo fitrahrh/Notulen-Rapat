@@ -63,16 +63,16 @@
                                         <input type="email" class="form-control" id="email" name="email" value="{{ $user->email }}">
                                     </div>
                                     <div class="form-group col-md-3">
+                                        <label for="nip">NIP</label>
+                                        <input type="text" class="form-control" id="nip" name="nip" value="{{ $user->pegawai->nip }}" disabled>
+                                    </div>
+                                    <div class="form-group col-md-3">
                                         <label for="password">Password</label>
                                         <input type="password" class="form-control" id="password" name="password" placeholder="Current password">
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="password_confirmation">Confirm Password</label>
                                         <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Confirm password">
-                                    </div>
-                                    <div class="form-group col-md-3">
-                                        <label for="nip">NIP</label>
-                                        <input type="text" class="form-control" id="nip" name="nip" value="{{ $user->pegawai->nip }}" disabled>
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="alamat">Alamat</label>
@@ -115,14 +115,6 @@
                             <div class="form-group">
                                 <label>Email</label>
                                 <p>{{ $user->email }}</p>
-                            </div>
-                            <div class="profile-image">
-                                <label>Profile Image</label><br>
-                                @if ($user->profile_image)
-                                    <img src="{{ asset('images/profile/' . $user->profile_image) }}" alt="Profile Image" id="profile_image_preview">
-                                @else
-                                    <img src="{{ asset('images/default-profile.png') }}" alt="Profile Image" id="profile_image_preview">
-                                @endif
                             </div>
                             <div class="profile-image">
                                 <label>Tanda Tangan</label><br>
