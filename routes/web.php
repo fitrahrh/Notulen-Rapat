@@ -75,6 +75,8 @@ Route::resource('uraian', UraianController::class)->middleware('auth');
 Route::resource('kegiatan', KegiatanController::class)->middleware('auth');
 
 Route::resource('pegawai', PegawaiController::class)->middleware('auth');
+Route::put('/pegawai/editrole/{id}', [PegawaiController::class, 'editrole'])->name('pegawai.editrole')->middleware('auth');
+Route::put('/pegawai/editverifikator/{id}', [PegawaiController::class, 'editverifikator'])->name('pegawai.editverifikator')->middleware('auth');
 
 // route jenis rapat
 Route::resource('jenis-rapat', JenisRapatController::class)->middleware('auth');

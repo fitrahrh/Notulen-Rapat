@@ -118,6 +118,49 @@ class PegawaiController extends Controller
         return redirect()->route('pegawai.index')->with('success', 'Pegawai updated successfully.');
     }
 
+    public function editRole(Request $request, $id)
+    {
+        // Pengecekan role jika bukan admin maka tidak bisa mengakses
+        if (auth()->user()->role !== 'admin') {
+            return redirect()->route('pegawai.index')->with('error', 'You do not have admin access');
+        }
+    
+        $request->validate([
+            'role' => 'nullable|string|in:admin,user', // Validasi role yang diizinkan
+        ]);
+    
+        $pegawai = Pegawai::findOrFail($id);
+        $user = User::where('pegawai_id', $pegawai->pegawai_id)->first();
+    
+        if ($user) {
+            $user->role = $request->input('role');
+            $user->save();
+        }
+    
+        return redirect()->route('pegawai.index')->with('success', 'Role updated successfully.');
+    }
+
+    public function editverifikator(Request $request, $id)
+    {
+        // Pengecekan role jika bukan admin maka tidak bisa mengakses
+        if (auth()->user()->role !== 'admin') {
+            return redirect()->route('pegawai.index')->with('error', 'You do not have admin access');
+        }
+    
+        $request->validate([
+            'verifikator' => 'nullable|string|in:rolan', // Validasi role yang diizinkan
+        ]);
+    
+        $pegawai = Pegawai::findOrFail($id);
+        $user = User::where('pegawai_id', $pegawai->pegawai_id)->first();
+    
+        if ($user) {
+            $user->verifikator = $request->input('verifikator');
+            $user->save();
+        }
+    
+        return redirect()->route('pegawai.index')->with('success', 'verifikator updated successfully.');
+    }
     // Remove the specified resource from storage
     public function destroy($id)
     {
