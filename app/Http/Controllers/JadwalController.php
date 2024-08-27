@@ -65,48 +65,49 @@ class JadwalController extends Controller
     }
 
     public function store(Request $request)
-{
-    $request->validate([
-        'name_rapat' => 'required',
-        'jenis_rapat_id' => 'required|exists:jenis_rapat,jenis_rapat_id',
-        'tanggal' => 'required|date',
-        'jam_mulai' => 'required|date_format:H:i',
-        'jam_selesai' => 'required|date_format:H:i',
-        'tempat_rapat' => 'required',
-        'keterangan' => 'nullable',
-        'uraian_id' => 'required|exists:uraian,uraian_id',
-    ]);
-
-    try {
-        $uraian = Uraian::findOrFail($request->uraian_id);
-        $kegiatan = $uraian->kegiatan;
-        $dpa = $kegiatan->dpa;
-
-        $jadwal = new Jadwal([
-            'name_rapat' => $request->name_rapat,
-            'jenis_rapat_id' => $request->jenis_rapat_id,
-            'tanggal' => $request->tanggal,
-            'jam_mulai' => $request->jam_mulai,
-            'jam_selesai' => $request->jam_selesai,
-            'tempat_rapat' => $request->tempat_rapat,
-            'keterangan' => $request->keterangan,
-            'uraian_id' => $request->uraian_id,
-            'kegiatan_id' => $kegiatan->kegiatan_id,
-            'dpa_id' => $dpa->dpa_id,
+    {
+        $request->validate([
+            'name_rapat' => 'required',
+            'jenis_rapat_id' => 'required|exists:jenis_rapat,jenis_rapat_id',
+            'tanggal' => 'required|date',
+            'jam_mulai' => 'required|date_format:H:i',
+            'jam_selesai' => 'required|date_format:H:i',
+            'tempat_rapat' => 'required',
+            'keterangan' => 'nullable',
+            'uraian_id' => 'required|exists:uraian,uraian_id',
+            'peserta' => 'required|array',
+            'peserta.*' => 'exists:pegawai,pegawai_id',
         ]);
-
-        // Debugging
-        \Log::info('Jadwal data:', $jadwal->toArray());
-
-        $jadwal->save();
-
-        return redirect()->route('jadwal-rapat.index')->with('success', 'Jadwal rapat berhasil disimpan.');
-    } catch (Exception $e) {
-        \Log::error('Error saving jadwal:', ['error' => $e->getMessage()]);
-        return redirect()->back()->withErrors(['error' => 'Terjadi kesalahan saat menyimpan jadwal rapat.']);
+    
+        try {
+            $uraian = Uraian::findOrFail($request->uraian_id);
+            $kegiatan = $uraian->kegiatan;
+            $dpa = $kegiatan->dpa;
+    
+            $jadwal = new Jadwal([
+                'name_rapat' => $request->name_rapat,
+                'jenis_rapat_id' => $request->jenis_rapat_id,
+                'tanggal' => $request->tanggal,
+                'jam_mulai' => $request->jam_mulai,
+                'jam_selesai' => $request->jam_selesai,
+                'tempat_rapat' => $request->tempat_rapat,
+                'keterangan' => $request->keterangan,
+                'uraian_id' => $request->uraian_id,
+                'kegiatan_id' => $kegiatan->kegiatan_id,
+                'dpa_id' => $dpa->dpa_id,
+            ]);
+    
+            $jadwal->save();
+    
+            // Simpan peserta rapat
+            $jadwal->pegawai()->attach($request->peserta);
+    
+            return redirect()->route('jadwal-rapat.index')->with('success', 'Jadwal rapat berhasil disimpan.');
+        } catch (Exception $e) {
+            \Log::error('Error saving jadwal:', ['error' => $e->getMessage()]);
+            return redirect()->back()->withErrors(['error' => 'Terjadi kesalahan saat menyimpan jadwal rapat.']);
+        }
     }
-}
-
 
     public function show(Jadwal $jadwal)
     {
