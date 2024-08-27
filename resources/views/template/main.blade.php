@@ -72,6 +72,10 @@
     border: 1px solid #ccc;
     border-radius: 4px;
 }
+.sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link.active, .sidebar-light-primary .nav-sidebar>.nav-item>.nav-link.active {
+    background-color: #0891b2;
+    color: #fff;
+}
 </style>
 
 <body class="hold-transition sidebar-mini">
@@ -87,7 +91,7 @@
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="/" class="nav-link">Dashboard</a>
+                    <a href="{{ route('dashboard') }}" class="nav-link">Dashboard</a>
                 </li>
             </ul>
 
@@ -159,7 +163,7 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
                         <li class="nav-item">
                             <a href="/" class="nav-link">
-                                <i class="nav-icon fa-solid fa-gauge-high"></i>
+                                <i class="nav-icon fa-solid fa-chart-simple"></i>
                                 <p>Dashboard</p>
                             </a>
                         </li>
@@ -174,37 +178,37 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="/pegawai" class="nav-link">
+                                    <a href="{{ route('pegawai.index') }}" class="nav-link">
                                         <i class="nav-icon fa-solid fa-angle-right ml-2"></i>
                                         <p>Pegawai</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/bidang" class="nav-link">
+                                    <a href="{{ route('bidang.index') }}" class="nav-link">
                                         <i class="nav-icon fa-solid fa-angle-right ml-2"></i>
                                         <p>Bidang</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/dpa" class="nav-link">
+                                    <a href="{{ route('dpa.index') }}" class="nav-link">
                                         <i class="nav-icon fa-solid fa-angle-right ml-2"></i>
                                         <p>DPA</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/kegiatan" class="nav-link">
+                                    <a href="{{ route('kegiatan.index') }}" class="nav-link">
                                         <i class="nav-icon fa-solid fa-angle-right ml-2"></i>
                                         <p>Kegiatan</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/uraian" class="nav-link">
+                                    <a href="{{ route('uraian.index') }}" class="nav-link">
                                         <i class="nav-icon fa-solid fa-angle-right ml-2"></i>
                                         <p>Uraian</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/jenis-rapat" class="nav-link">
+                                    <a href="{{ route('jenis-rapat.index') }}" class="nav-link">
                                         <i class="nav-icon fa-solid fa-angle-right ml-2"></i>
                                         <p>Jenis Rapat</p>
                                     </a>
@@ -213,19 +217,19 @@
                         @endif
                         </li>
                         <li class="nav-item">
-                            <a href="/notulen" class="nav-link">
+                            <a href="{{ route('notulen.index') }}" class="nav-link">
                                 <i class="nav-icon fa-solid fa-pen-to-square"></i>
                                 <p>Notulen</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/jadwal-rapat" class="nav-link">
+                            <a href="{{ route('jadwal-rapat.index') }}" class="nav-link">
                                 <i class="nav-icon fa-solid fa-calendar-days"></i>
                                 <p>Jadwal</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/profile" class="nav-link">
+                            <a href="{{ route('profile.index') }}" class="nav-link">
                                 <i class="nav-icon fa-solid fa-user"></i>
                                 <p>Account</p>
                             </a>
@@ -233,7 +237,7 @@
                         <li class="nav-item">
                             <a class="log-out ml-3" href="#" class="nav-link">
                                 <i class="nav-icon fa-solid fa-power-off" style="color: red;"></i> Logout
-                                <form action="/logout" method="POST" id="logging-out">
+                                <form action="{{ route('logout') }}" method="POST" id="logging-out">
                                     @csrf
                                 </form>
                             </a>
@@ -360,7 +364,7 @@
                     return this.href == url;
                 }).parentsUntil(".nav-sidebar > .nav-treeview")
                 .css({
-                    'display': 'block'
+                    'display': 'block',
                 })
                 .addClass('menu-open').prev('a')
                 .addClass('active');

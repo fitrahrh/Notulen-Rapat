@@ -30,7 +30,7 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <div class="table-responsive">
+                                <div class="table-scroll">
                                 <table id="example1" class="table table-striped table-bordered table-hover text-center" style="width: 100%">
                                     <thead>
                                         <tr>
@@ -96,7 +96,7 @@
                                         @endforeach
                                     </tbody>
                                 </table>
-                            </div>
+                                </div>
                         </div>
                     </div>
 
@@ -142,6 +142,14 @@
     </div>
 </div>
 
+@endsection
+
+@section('styles')
+<style>
+.table-scroll {
+    overflow-x: auto;
+}
+</style>
 @endsection
 
 @section('scripts')

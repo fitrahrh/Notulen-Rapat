@@ -36,13 +36,12 @@ Route::post('/password/email', [PasswordResetController::class, 'sendResetLinkEm
 // Rute untuk halaman reset password
 Route::get('/password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('/password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
-
 // Route User Editor
 Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show')->middleware('auth');
 Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update')->middleware('auth');
+Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index')->middleware('auth');
 
-Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show')->middleware('auth');
-Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update')->middleware('auth');
+
 
 // Route Bidang
 Route::resource('bidang', BidangController::class)->middleware('auth');
@@ -54,10 +53,11 @@ Route::get('/login', [AuthController::class, 'index'])->name('login')->middlewar
 Route::post('/login', [AuthController::class, 'authenticate']);
 Route::get('/register', [AuthController::class, 'register']);
 Route::post('/register', [AuthController::class, 'process']);
-Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
-// Route dashboard
-Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth');
+
+// Dashboard Route
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
 Route::get('/', [DashboardController::class, 'index'])->middleware('auth');
 
 // Reports

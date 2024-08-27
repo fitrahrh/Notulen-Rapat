@@ -158,7 +158,7 @@
                     <h1>Login</h1>
                 </div>
                 <div class="login-form">
-                <form class="needs-validation" novalidate action="/login" method="POST" id="loginForm">
+                <form class="needs-validation" novalidate action="{{ route('login') }}" method="POST" id="loginForm">
                     @csrf
                     <md-outlined-text-field label="Email" type="email" name="email" required></md-outlined-text-field>
                 
@@ -169,7 +169,7 @@
                             <md-checkbox id="remember"></md-checkbox> Remember Me
                         </div><br>
                         <div class="forgot-password-link">
-                            <a href="/password/reset">Lupa Password?</a>
+                            <a href="{{ route('password.request') }}">Lupa Password?</a>
                         </div>
                         <div class="col-4">
                         <md-filled-button class="button" type="submit">Sign In</md-filled-button>

@@ -246,13 +246,17 @@
                                             <input type="date" name="tanggal" class="form-control" required>
                                         </div>
                                         <div class="form-group">
-                                            <label for="peserta">Peserta Rapat</label><br>
-                                            <select id="peserta" name="peserta[]" class="form-control" multiple="multiple" required>
-                                                @foreach ($pegawai as $peg)
-                                                <option value="{{ $peg->pegawai_id }}">{{ $peg->email }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
+    <label for="peserta">Peserta Rapat</label><br>
+    <select id="peserta" name="peserta[]" class="form-control" multiple="multiple" required>
+        @foreach ($pegawai as $peg)
+            @if(is_object($peg))
+                <option value="{{ $peg->pegawai_id }}">{{ $peg->email }}</option>
+            @else
+                <option value="">Invalid Data</option>
+            @endif
+        @endforeach
+    </select>
+</div>
                                         <div class="form-group">
                                             <label for="jam_mulai">Jam Mulai</label>
                                             <input type="time" name="jam_mulai" class="form-control" required>
