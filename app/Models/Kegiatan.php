@@ -25,13 +25,13 @@ class Kegiatan extends Model
         });
     }
 
-    public function dpa() : BelongsTo
+    public function dpa(): BelongsTo
     {
         return $this->belongsTo(DPA::class, 'dpa_id', 'dpa_id');
     }
 
-    public function uraians() : HasMany
+    public function uraians(): HasMany
     {
-        return $this->hasMany(Uraian::class, 'uraian_id', 'uraian_id');
+        return $this->hasMany(Uraian::class, 'kegiatan_id', 'kegiatan_id');
     }
 }

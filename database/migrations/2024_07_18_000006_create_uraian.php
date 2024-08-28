@@ -13,7 +13,12 @@ return new class extends Migration
             $table->string('name_uraian');
             $table->timestamps();
             $table->unsignedBigInteger('kegiatan_id')->nullable();
+            $table->unsignedBigInteger('dpa_id')->nullable();
+            $table->unsignedBigInteger('bidang_id')->nullable();
+
             $table->foreign('kegiatan_id')->references('kegiatan_id')->on('kegiatan')->onDelete('cascade');
+            $table->foreign('dpa_id')->references('dpa_id')->on('dpa')->onDelete('cascade');
+            $table->foreign('bidang_id')->references('bidang_id')->on('bidang')->onDelete('cascade');
         });
     }
 

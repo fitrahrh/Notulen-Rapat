@@ -25,23 +25,28 @@ class DPA extends Model
         });
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_user', 'id');
     }
 
-    public function bidang() : BelongsTo
+    public function bidang(): BelongsTo
     {
         return $this->belongsTo(Bidang::class, 'bidang_id', 'bidang_id');
     }
 
-    public function jadwals()
+    public function jadwals(): HasMany
     {
-        return $this->hasMany(Jadwal::class, 'jadwal_id', 'jadwal_id');
+        return $this->hasMany(Jadwal::class, 'dpa_id', 'dpa_id');
     }
 
-    public function kegiatans() : HasMany
+    public function kegiatans(): HasMany
     {
-        return $this->hasMany(Kegiatan::class, 'kegiatan_id', 'kegiatan_id');
+        return $this->hasMany(Kegiatan::class, 'dpa_id', 'dpa_id');
+    }
+
+    public function uraians(): HasMany
+    {
+        return $this->hasMany(Uraian::class, 'dpa_id', 'dpa_id');
     }
 }

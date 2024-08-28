@@ -12,7 +12,7 @@ class Bidang extends Model
     protected $table = 'bidang';
     protected $primaryKey = 'bidang_id';
     protected $fillable = [
-        'name_bidang', 'id_user', 'dpa_id',
+        'name_bidang', 'id_user',
     ];
     
     public static function boot()
@@ -21,7 +21,7 @@ class Bidang extends Model
 
         static::deleting(function ($bidang) {
             if ($bidang->dpas()->count() > 0) {
-                throw new Exception("Cannot delete Bidang because it has related dpa records.");
+                throw new Exception("Cannot delete bidang because it has related dpa records.");
             }
         });
     }
@@ -34,5 +34,10 @@ class Bidang extends Model
     public function dpas(): HasMany
     {
         return $this->hasMany(DPA::class, 'bidang_id', 'bidang_id');
+    }
+
+    public function uraians(): HasMany
+    {
+        return $this->hasMany(Uraian::class, 'bidang_id', 'bidang_id');
     }
 }

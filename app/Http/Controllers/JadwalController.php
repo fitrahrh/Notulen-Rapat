@@ -25,10 +25,11 @@ class JadwalController extends Controller
     {
         // Dapatkan user yang sedang login
         $user = auth()->user();
-    
-        if (in_array($user->role, ['user', 'admin'])) {
+
+        if ($user->role === 'admin') {
             $jadwal = Jadwal::all();
-        } else {
+            $uraian = Uraian::all();
+        } else{
             // Dapatkan pegawai yang terkait dengan user yang sedang login
             $pegawai = $user->pegawai;
     
@@ -39,31 +40,41 @@ class JadwalController extends Controller
             $jadwal = Jadwal::whereHas('dpa', function ($query) use ($bidang) {
                 $query->where('bidang_id', $bidang->bidang_id);
             })->get();
+
+            $uraian = Uraian::where('bidang_id', $bidang->bidang_id)->get();
         }
-    
+
         $kegiatan = Kegiatan::all();
         $dpa = Dpa::all();
-        $uraian = Uraian::all();
         $jenis = Jenisrapat::all();
 
-        // Pastikan $pegawai didefinisikan sebelum digunakan dalam compact
-        if (!isset($pegawai)) {
-            $pegawai = Pegawai::with('bidang')->get();
-        }
-    
+        $pegawai = Pegawai::with('bidang')->get();
         return view('jadwal-rapat.index', compact('jadwal', 'kegiatan', 'dpa', 'uraian', 'jenis', 'pegawai'));
     }
 
     public function create()
-    {
-        $kegiatan = Kegiatan::all();
-        $dpa = Dpa::all();
+{
+    $user = auth()->user();
+
+    if ($user->role === 'admin') {
         $uraian = Uraian::all();
-        $jenis = Jenisrapat::all();
-        $pegawai = Pegawai::with('bidang')->get();
-        return view('jadwal-rapat.create', compact('kegiatan', 'dpa', 'uraian', 'jenis', 'pegawai'));
+    } else {
+        // Dapatkan pegawai yang terkait dengan user yang sedang login
+        $pegawai = $user->pegawai;
+        
+        // Dapatkan bidang yang terkait dengan pegawai
+        $bidang = $pegawai->bidang;
+        
+        // Dapatkan uraian yang terkait dengan bidang tersebut
+        $uraian = Uraian::where('bidang_id', $bidang->bidang_id)->get();
     }
 
+    $kegiatan = Kegiatan::all();
+    $dpa = Dpa::all();
+    $jenis = Jenisrapat::all();
+    $pegawai = Pegawai::with('bidang')->get();
+    return view('jadwal-rapat.create', compact('kegiatan', 'dpa', 'uraian', 'jenis', 'pegawai'));
+}
     public function store(Request $request)
     {
         $request->validate([
@@ -135,10 +146,25 @@ class JadwalController extends Controller
     public function edit($id)
 {
     $jadwal = Jadwal::findOrFail($id);
+    $user = auth()->user();
+
+    if ($user->role === 'admin') {
+        $uraian = Uraian::all();
+    } else {
+        // Dapatkan pegawai yang terkait dengan user yang sedang login
+        $pegawai = $user->pegawai;
+        
+        // Dapatkan bidang yang terkait dengan pegawai
+        $bidang = $pegawai->bidang;
+        
+        // Dapatkan uraian yang terkait dengan bidang tersebut
+        $uraian = Uraian::where('bidang_id', $bidang->bidang_id)->get();
+    }
+
     $kegiatan = Kegiatan::all();
     $dpa = Dpa::all();
-    $uraian = Uraian::all();
-    $jenisRapat = Jenisrapat::all(); // Tambahkan ini jika Anda memerlukan jenis rapat
+    $jenisRapat = Jenisrapat::all();
+    $pegawai = Pegawai::with('bidang')->get();
     return view('jadwal-rapat.edit', compact('jadwal', 'kegiatan', 'dpa', 'uraian', 'jenisRapat'));
 }
 

@@ -317,9 +317,9 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="uraian_id">Uraian</label>
-                                            <select name="uraian_id" class="form-control" required>
-                                                @foreach ($uraian as $ur)
-                                                <option value="{{ $ur->uraian_id }}">{{ $ur->name_uraian }}</option>
+                                            <select name="uraian_id" id="uraian_id" class="form-control">
+                                                @foreach($uraian as $item)
+                                                    <option value="{{ $item->uraian_id }}">{{ $item->name_uraian }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
